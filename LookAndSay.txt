@@ -1,0 +1,94 @@
+//Look_And_Say_sequence.
+/*
+--------------------------------"READ ABOUT LOOK AND SAY SEQUENCE" TO HELP YOU UNDERSTAND THE CODE BETTER-----------------------------
+This program will display the next value in "Look And Say " sequence. First, the entered value should NOT contain any zeroes. Second, 
+the value needs to be sized (since i am not using an array to store the data). Size here means if the value is in order of 1 or 10 or
+100 or 1000 or ....etc. Then, 
+the entered value is segmented and each number (put in the order forming the tested value) is counted.
+For example:
+1121
+    NoOF  |    Tested No    | Output
+----------------------------------------
+     1    |      1-121      |  -------
+     2    |       1 -21     |  -------
+          |     --------    |      21
+     1    |         2-1     |  -------
+          |     --------    |      12
+     1    |           1     |      11
+
+This translates to : we got two 1's, and one 2, and one 1.
+---->  211211.
+*/
+
+/*
+this function will size a value in the form of >=10 or >=100 or >=pow(10,n)--->where n:1,2,3,4,5,6,...etc.
+For example:
+val = 1211 when tested val < 10000 and > 1000 then the variable size will equal 1000 because
+val = (1*1000)+(2*100)+(1*10)+(1*1) = 1211. 
+to achieve this size variable needs to be divided by 10 to capture the next number(lesser number)
+*/
+
+#define yes 1
+#define no 0
+int SizingNumbers(int val){
+     int i = 1;
+     int size = 1;
+     while(i){
+    if((val/size) >= 1 && (val/size) <= 9){
+         i = 0;
+    }
+    else{
+      size = size * 10;
+      }
+   }
+   return size;
+}
+
+LookAndSay(int size, int val){
+   int buffer = 1;
+   int NoOf = 0;
+   int flag = no;
+   while(val){
+     if(buffer == (val/size)){
+          NoOf++;
+          flag = yes;
+     }
+     else if(buffer != (val/size)){
+       if(flag){
+           puts(NoOf);   //Only print if the next value is changed.
+           puts(buffer); //Only print if the next value is changed.
+       }
+       flag = no;            //To prevent any unwanted changes to "val" and "size" variables.
+       NoOf = 0;             //Resetting the counter to count occurrences of the new value.
+       buffer = (val/size);  //Assigning the correct value to "buffer" in order to continue.
+     }
+     if(flag){
+//Continue the same example: val = 1211 after counting the number of 1's, val = 1211 - (buffer = 1)*(size = 1000) = 211 and so on.
+        val = val - (buffer*size);
+//After that "size will be decreased to match "val"'s new value range.
+        size = size / 10;
+      }
+  }
+//Print the current number of occurrences of last number tested.
+   puts(NoOf);
+//Print the last value being tested.
+   puts(buffer);
+}
+main(){
+
+  int val; //Entered value by user
+  int size;
+
+//value is entered by user here
+  puts("Enter a value containing 1<-->9 numbers:\n");
+  val = gets("Enter a number:");
+
+  puts("\n");
+
+  size = SizingNumbers(val);
+
+  puts(size);
+  puts("\n");
+
+  LookAndSay(size, val);
+}
